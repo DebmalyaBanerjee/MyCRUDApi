@@ -1,5 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// ✅ 1. Add Configuration for SQL Server
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// ✅ 2. Register AppDbContext with Entity Framework Core
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// ✅ 3. Register Repositories (DI)
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// ✅ 4. Register MediatR
+builder.Services.AddMediatR(typeof(GetAllProductsQueryHandler).Assembly);
+
 // Add services to the container.
 
 builder.Services.AddControllers();
